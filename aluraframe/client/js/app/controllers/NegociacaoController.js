@@ -6,6 +6,7 @@ class NegociacaoController {
         this._inputDate = $('#data');
         this._inputQtd = $('#quantidade')
         this._inputValor = $('#valor');
+        this._listaNegociacoes = new ListaNegociacao();
 
     }
 
@@ -27,9 +28,19 @@ class NegociacaoController {
 
     adiciona(event) {
         event.preventDefault();
-        // let date = new Date(this._inputDate.value)
-        let date = new Date(...this._inputDate.value.split('-').map((item, indice) => item - indice % 2))
-        let negociacao = new Negociacao(date, this._inputQtd.value, this._inputValor.value);
-        console.log(negociacao);
+        this._listaNegociacoes.adiciona(this._criaNegociacao());
+        this._resetForm();
+    }
+
+    _criaNegociacao() {
+        return new Negociacao(DateHelper.textoParaData(this._inputDate.value), this._inputQtd.value, this._inputValor.value);
+    }
+    _resetForm() {
+        // reset do form
+        this._inputDate.value = '';
+        this._inputDate.focus();
+        this._inputQtd.value = 1;
+        // focus no input almejado
+        this._inputValor.value = 0;
     }
 }
