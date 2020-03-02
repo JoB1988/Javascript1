@@ -5,7 +5,7 @@ class ToastView extends View {
     }
 
     _template(message) {
-        return `<p class='alert alert-info'>${message}</p>`
+        return `<p class='alert alert-success'>${message}</p>`
     }
 
 }

@@ -1,54 +1,65 @@
 class NegociacaoController {
+  constructor() {
+    var $ = document.querySelector.bind(document);
+    this._inputDate = $("#data");
+    this._inputQtd = $("#quantidade");
+    this._inputValor = $("#valor");
+    this._listaNegociacoes = new ListaNegociacao(modelo => {
+      // esse função será chamada quando chamar o método adiciona e apaga
+      // o modelo é um objeto do tipo ListaNegociacao
+      this._negociacaoView.update(modelo);
+    });
+    // template será renderizado na div que tem o #negociacaoView
+    this._negociacaoView = new NegociacaoView($("#negociacaoView"));
+    this._negociacaoView.update(this._listaNegociacoes);
+    this._toastMessage = new Toast();
+    this._showToast = new ToastView($("#toastView"));
+  }
 
-    constructor() {
+  get data() {
+    return this._inputDate;
+  }
 
-        var $ = document.querySelector.bind(document);
-        this._inputDate = $('#data');
-        this._inputQtd = $('#quantidade')
-        this._inputValor = $('#valor');
-        this._listaNegociacoes = new ListaNegociacao();
-        // template será renderizado na div que tem o #negociacaoView
-        this._negociacaoView = new NegociacaoView($('#negociacaoView'));
-        this._negociacaoView.update(this._listaNegociacoes);
-        this._toastMessage = new Toast();
-        this._showToast = new ToastView($('#toastView'));
-    }
+  get quantidade() {
+    return this._inputQtd;
+  }
 
-    get data() {
-        return this._inputDate;
-    }
+  get valor() {
+    return this._inputValor;
+  }
 
-    get quantidade() {
-        return this._inputQtd;
-    }
+  get volume() {
+    return this._inputQtd * this._inputValor;
+  }
 
-    get valor() {
-        return this._inputValor;
-    }
+  adiciona(event) {
+    event.preventDefault();
+    this._listaNegociacoes.adiciona(this._criaNegociacao());
+    this._toastMessage.message = "Negociação adicionado com sucesso!";
+    this._showToast.update(this._toastMessage.message);
+    this._resetForm();
+  }
 
-    get volume() {
-        return this._inputQtd * this._inputValor;
-    }
+  apaga() {
+    this._listaNegociacoes.esvazia(this._negociacaoView);
+    this._toastMessage.message = "Lista removida com sucesso!";
+    this._showToast.update(this._toastMessage.message);
+  }
 
-    adiciona(event) {
-        event.preventDefault();
-        this._listaNegociacoes.adiciona(this._criaNegociacao());
-        this._negociacaoView.update(this._listaNegociacoes);
-        this._toastMessage.message = 'Negociação adicionado com sucesso';
-        this._showToast.update(this._toastMessage.message)
-        this._resetForm();
-    }
+  _criaNegociacao() {
+    return new Negociacao(
+      DateHelper.textoParaData(this._inputDate.value),
+      this._inputQtd.value,
+      this._inputValor.value
+    );
+  }
 
-    _criaNegociacao() {
-        return new Negociacao(DateHelper.textoParaData(this._inputDate.value), this._inputQtd.value, this._inputValor.value);
-    }
-
-    _resetForm() {
-        // reset do form
-        this._inputDate.value = '';
-        this._inputDate.focus();
-        this._inputQtd.value = 1;
-        // focus no input almejado
-        this._inputValor.value = 0;
-    }
+  _resetForm() {
+    // reset do form
+    this._inputDate.value = "";
+    this._inputDate.focus();
+    this._inputQtd.value = 1;
+    // focus no input almejado
+    this._inputValor.value = 0;
+  }
 }

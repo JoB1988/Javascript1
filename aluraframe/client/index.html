@@ -11,7 +11,7 @@
 <body class="container">
 
     <h1 class="text-center">Negociações</h1>
-
+    <div id='toastView'></div>
     <form class="form" onsubmit="negociacao.adiciona(event)">
 
         <div class="form-group">
@@ -36,13 +36,12 @@
         <button class="btn btn-primary text-center" type="button">
             Importar Negociações
         </button>
-        <button class="btn btn-primary text-center" type="button">
+        <button class="btn btn-primary text-center" type="button" onclick="negociacao.apaga()">
             Apagar
         </button>
     </div>
     <br>
     <br>
-    <div id='toastView'></div>
     <div id='negociacaoView'></div>
         
     <script src="js/app/models/Negociacao.js"></script>
