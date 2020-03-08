@@ -1,14 +1,11 @@
 class ListaNegociacao {
     
-    constructor(armadilha) {
+    constructor() {
         this._negociacoes = [];
-        this._armadilha = armadilha;
     }
 
     adiciona(negociacao) {
         this._negociacoes.push(negociacao);
-        // this quer dizer que passa esse objeto inteiro que tá no constructor
-        this._armadilha(this);
     }
     
     get negociacoes() {
@@ -18,7 +15,6 @@ class ListaNegociacao {
     
     esvazia() {
         this._negociacoes = [];
-        this._armadilha(this);
     }
 
 }

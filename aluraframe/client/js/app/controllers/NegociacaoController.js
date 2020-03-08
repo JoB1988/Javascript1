@@ -4,10 +4,18 @@ class NegociacaoController {
     this._inputDate = $("#data");
     this._inputQtd = $("#quantidade");
     this._inputValor = $("#valor");
-    this._listaNegociacoes = new ListaNegociacao(modelo => {
-      // esse função será chamada quando chamar o método adiciona e apaga
-      // o modelo é um objeto do tipo ListaNegociacao
-      this._negociacaoView.update(modelo);
+
+    let self = this
+    this._listaNegociacoes = new Proxy(new ListaNegociacao(), {
+        get(target, prop, receiver) {
+            if((['adiciona', 'esvazia'].includes(prop)) && (typeof(target[prop]) == typeof(Function))) {
+              return function() {
+                    Reflect.apply(target[prop], target, arguments);
+                    self._negociacaoView.update(target);
+                }
+            }
+            return Reflect.get(target, prop, receiver)
+        }
     });
     // template será renderizado na div que tem o #negociacaoView
     this._negociacaoView = new NegociacaoView($("#negociacaoView"));
