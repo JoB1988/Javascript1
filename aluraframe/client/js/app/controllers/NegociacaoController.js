@@ -4,9 +4,18 @@ class NegociacaoController {
     this._inputDate = $("#data");
     this._inputQtd = $("#quantidade");
     this._inputValor = $("#valor");
-    this._listaNegociacoes = new Bind(new ListaNegociacao(), new NegociacaoView($("#negociacaoView")), "adiciona", "esvazia");
+    this._listaNegociacoes = new Bind(
+      new ListaNegociacao(),
+      new NegociacaoView($("#negociacaoView")),
+      "adiciona",
+      "esvazia"
+    );
     // template será renderizado na div que tem o #negociacaoView
-    this._mensagem = new Bind(new Toast(), new ToastView($("#toastView")), "message");
+    this._mensagem = new Bind(
+      new Toast(),
+      new ToastView($("#toastView")),
+      "message"
+    );
   }
 
   get data() {
@@ -52,5 +61,17 @@ class NegociacaoController {
     this._inputQtd.value = 1;
     // focus no input almejado
     this._inputValor.value = 0;
+  }
+
+  import() {
+    let service = new ImportService();
+    service.obeterNegociacaoDaSemana((error, response) => {
+      if (error) {
+        this._mensagem.text = error;
+        return;
+      }
+      response.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+      this._mensagem.text = "Negociações importadas com sucesso!";
+    });
   }
 }

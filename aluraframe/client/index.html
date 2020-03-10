@@ -33,7 +33,7 @@
     </form>
 
     <div class="text-center">
-        <button class="btn btn-primary text-center" type="button">
+        <button class="btn btn-primary text-center" type="button" onclick="negociacao.import()">
             Importar Negociações
         </button>
         <button class="btn btn-primary text-center" type="button" onclick="negociacao.apaga()">
@@ -53,6 +53,7 @@
     <script src="js/app/view/View.js"></script>
     <script src="js/app/view/NegociacaoView.js"></script>
     <script src="js/app/services/ProxyFactory.js"></script>
+    <script src="js/app/services/ImportService.js"></script>
     <script src="js/app/view/ToastView.js"></script>
     <script>
         let negociacao = new NegociacaoController();
