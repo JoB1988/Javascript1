@@ -5,7 +5,11 @@ class ToastView extends View {
     }
 
     _template(message) {
-        return `<p class='alert alert-success'>${message}</p>`
+        if(typeof message == typeof 'string') {
+            return `<p class='alert alert-success'>${message}</p>`;
+        } else {
+            return `<p></p>`;
+        }
     }
 
 }
