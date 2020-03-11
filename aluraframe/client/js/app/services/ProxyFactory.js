@@ -14,9 +14,6 @@ class ProxyFactory {
         if (prop.includes(prop)) {
           acao(value);
           target(prop) = value;
-          console.log(target)
-          console.log(prop)
-          console.log(value)
         }
         return Reflect.get(target, prop, value, receiver);
       }

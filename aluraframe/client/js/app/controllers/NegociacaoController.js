@@ -36,9 +36,17 @@ class NegociacaoController {
 
   adiciona(event) {
     event.preventDefault();
-    this._listaNegociacoes.adiciona(this._criaNegociacao());
-    this._mensagem.message = "Negociação adicionado com sucesso!";
-    this._resetForm();
+    let service = new ProdutoService();
+    let negociacao = {
+      data: this._criaNegociacao().data,
+      quantidade: this._criaNegociacao().quantidade,
+      valor: this._criaNegociacao().valor
+    }; 
+    service.saveNew(negociacao).then(value => {
+      this._listaNegociacoes.adiciona(this._criaNegociacao());
+      this._resetForm();
+      // this._mensagem.message = `${value} com sucesso!`;
+    }).catch(error => this._mensagem.message = error);
   }
 
   apaga() {
@@ -64,14 +72,24 @@ class NegociacaoController {
   }
 
   import() {
-    let service = new ImportService();
-    service.obeterNegociacaoDaSemana((error, response) => {
-      if (error) {
-        this._mensagem.text = error;
-        return;
-      }
-      response.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
-      this._mensagem.text = "Negociações importadas com sucesso!";
-    });
+    let service = new ProdutoService();
+    Promise.all([
+      service.obeterNegociacaoDaSemana(),
+      service.obeterNegociacaoDaSemanaPassada(),
+      service.obeterNegociacaoDaSemanaRetrasada()
+    ])
+      .then(response => {
+        // A resposta veio 1 array com 3 arrays dentro. O método reduce, ele vai reduzir esses 3 array em um só.
+        // Para cada item do array(prevArray), ou seja, para cada array dentro do array,
+        // o método vai no novo array (newArray) e concatena um valor vazio com um
+        // elemento do array antigo. No caso, um array que estava dentro dele
+        // depois que finaliza o método, ele devolve um novo array, então é feito um forEach para adicionar na table
+        response
+          .reduce((newArray, prevArray) => newArray.concat(prevArray, []))
+          .sort((a, b) => a.valor - b.valor)
+          .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+        this._mensagem.text = "Negociações importadas com sucesso!";
+      })
+      .catch(error => (this._mensagem.text = error));
   }
 }
